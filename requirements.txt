@@ -1,0 +1,8 @@
+black
+darglint==1.4.0
+flake8-annotations==2.1.0
+flake8-bandit==2.1.2
+flake8-bugbear==20.1.4
+flake8-docstrings==1.5.0
+ipykernel
+pre-commit
