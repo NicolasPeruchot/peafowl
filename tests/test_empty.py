@@ -1,6 +1,6 @@
 """Pass the ci."""
 
 
-def empty():
+def test_empty():
     """Pass the ci."""
     assert True
