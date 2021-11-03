@@ -5,7 +5,7 @@ from typing import List
 import spacy
 
 
-def is_not_junk(token: spacy.tokens.token.Tokenn):
+def is_not_junk(token: spacy.tokens.token.Token):
     """Test if token is junk."""
     return token.is_stop is False and token.is_punct is False
 
