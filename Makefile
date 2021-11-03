@@ -1,4 +1,3 @@
-install:
-	python -m pip install -r requirements.txt
+develop:
+	pip install -e '.[dev]'
 	pre-commit install
-	python -m spacy download en_core_web_sm
