@@ -9,7 +9,7 @@ import pandas as pd
 import pyLDAvis
 import tomotopy as tp
 
-from ipywidgets import display
+from IPython.display import display
 
 from peafowl.preprocessing.utils import lemmatizer_dataset
 from peafowl.viz.utils import prepare_viz_LDA
