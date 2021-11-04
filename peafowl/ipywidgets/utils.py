@@ -1,7 +1,5 @@
 """Functions for the GuidedLDA interface."""
 
-import typing
-
 from typing import List
 
 import ipywidgets as widgets
@@ -21,7 +19,7 @@ class GuidedLDAInterface:
     def __init__(self, k: int) -> None:
         """Init."""
         self.k = k
-        self.topics = List[str]
+        self.topics: List[str] = []
         self.button_topic = widgets.Button(
             description="Add topic",
             button_style="",  # 'success', 'info', 'warning', 'danger' or ''
@@ -50,7 +48,6 @@ class GuidedLDAInterface:
         if word not in self.seeds[topic] and word:
             self.seeds[topic].append(word)
 
-    @typing.no_type_check
     def on_button_topic(self, b: widgets.Button):
         """Action on click for seed button."""
         topic = self.topic_name_widget.value
