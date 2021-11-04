@@ -41,7 +41,7 @@ test_packages = [
 setup(
     name="peafowl",
     version="0.0.1",
-    packages=find_packages(exclude=["notebooks"]),
+    packages=find_packages(exclude=["notebooks", "data"]),
     long_description=_read("README.md"),
     install_requires=base_packages,
     extras_require={"dev": dev_packages + test_packages, "test": test_packages,},
