@@ -21,10 +21,7 @@ class GuidedLDAInterface:
         self.k = k
         self.topics: List[str] = []
         self.button_topic = widgets.Button(
-            description="Add topic",
-            button_style="",  # 'success', 'info', 'warning', 'danger' or ''
-            tooltip="Add topic",
-            value="",
+            description="Add topic", button_style="", tooltip="Add topic", value="",
         )
 
         self.topic_name_widget = widgets.Text(
