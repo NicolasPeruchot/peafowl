@@ -25,7 +25,7 @@ class GuidedLDAInterface:
         )
 
         self.topic_name_widget = widgets.Text(
-            value="", placeholder="Topic name", description="String:", disabled=False
+            value="", placeholder="Topic name", description="New topic:", disabled=False
         )
 
         self.button_seed = widgets.Button(
@@ -33,7 +33,7 @@ class GuidedLDAInterface:
         )
 
         self.seed_widget = widgets.Text(
-            value="", placeholder="Word", description="String:", disabled=False
+            value="", placeholder="Word", description="New seed:", disabled=False
         )
 
         self.model = tp.LDAModel(k=2)
