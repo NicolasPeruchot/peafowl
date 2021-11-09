@@ -58,6 +58,11 @@ class GuidedLDAInterface:
         with self.output_seed:
             display(self.seed_text)
 
+    def explore(self, data: pd.Series, size: int = 10):
+        """Show examples of data."""
+        pd.set_option("display.max_colwidth", None)
+        return data.sample(size)
+
     def on_button_topic(self, b: widgets.Button):
         """Action on click for seed button."""
         self.output_topic.clear_output()
