@@ -6,3 +6,6 @@ develop:
 setup-tests:
 	pip install -e '.[test]'
 	python -m spacy download en_core_web_md
+
+test:
+	pytest
