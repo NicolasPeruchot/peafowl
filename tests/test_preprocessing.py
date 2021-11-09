@@ -2,7 +2,7 @@
 
 import spacy
 
-from peafowl.preprocessing.utils import is_not_junk, lemmatizer
+from peafowl.preprocessing.utils import is_junk, lemmatizer
 
 
 def test_lemmatizer():
@@ -18,14 +18,14 @@ def test_lemmatizer():
     assert expected_output == output
 
 
-def test_is_not_junk():
-    """Test is_not_junk function."""
+def test_is_junk():
+    """Test is_junk function."""
     # given
     text = "Some words are junk!"
     nlp = spacy.load("en_core_web_md")
     doc = nlp(text)
-    expected_output = [False, True, False, True, False]
+    expected_output = [True, False, True, False, True]
     # when
-    output = [is_not_junk(token) for token in doc]
+    output = [is_junk(token) for token in doc]
     # then
     assert expected_output == output

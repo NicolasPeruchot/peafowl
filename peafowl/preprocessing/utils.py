@@ -5,14 +5,14 @@ from typing import List
 import spacy
 
 
-def is_not_junk(token: spacy.tokens.token.Token) -> bool:
+def is_junk(token: spacy.tokens.token.Token) -> bool:
     """Test if token is junk."""
-    return token.is_stop is False and token.is_punct is False
+    return token.is_stop or token.is_punct
 
 
 def lemmatizer(doc: spacy.tokens.doc.Doc) -> List[str]:
     """Lemmatize one doc."""
-    lemma = [token.lemma_ for token in doc if is_not_junk(token)]
+    lemma = [token.lemma_ for token in doc if is_junk(token) is False]
     return lemma
 
 
