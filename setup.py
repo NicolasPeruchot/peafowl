@@ -17,6 +17,7 @@ base_packages = [
     "pyLDAvis==3.3.1",
     "spacy==3.1.4",
     "tomotopy==0.12.2",
+    "ipywidgets==7.6.5",
 ]
 
 dev_packages = [
