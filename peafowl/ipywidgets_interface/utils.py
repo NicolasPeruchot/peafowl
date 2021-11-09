@@ -101,9 +101,11 @@ class GuidedLDAInterface:
         for k, v in self.seeds.items():
             for word in v:
                 self.model.set_word_prior(word, [1.0 if k == i else 0 for i in range(n)])
-
         for _ in range(0, 100, 10):
             self.model.train(10)
+        return None
 
+    def viz(self):
+        """Visualisation for a trained model."""
         prepared_data = prepare_viz_LDA(model=self.model)
         return pyLDAvis.display(prepared_data)
