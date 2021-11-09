@@ -1,5 +1,7 @@
 """Functions for the GuidedLDA interface."""
 
+import warnings
+
 from typing import List
 
 import ipywidgets as widgets
@@ -11,6 +13,9 @@ from IPython.display import display
 
 from peafowl.preprocessing.utils import lemmatizer_dataset
 from peafowl.viz.utils import prepare_viz_LDA
+
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 class GuidedLDAInterface:
@@ -38,6 +43,10 @@ class GuidedLDAInterface:
 
         self.model = tp.LDAModel(k=2)
 
+        self.topic_text = widgets.Textarea(
+            value="\n".join(self.topics), placeholder="", description="", disabled=False
+        )
+
     def on_button_seed(self, b: widgets.Button):
         """Button for seeds."""
         topic = self.dropdown_topics.value
@@ -47,15 +56,20 @@ class GuidedLDAInterface:
 
     def on_button_topic(self, b: widgets.Button):
         """Action on click for seed button."""
+        self.output.clear_output()
         topic = self.topic_name_widget.value
         if topic not in self.topics and topic:
             self.topics.append(topic)
+        self.topic_text.value = "\n".join(self.topics)
+        with self.output:
+            display(self.topic_text)
 
     def add_topics(self):
         """Add topics with widgets."""
+        self.output = widgets.Output()
         self.button_topic.on_click(self.on_button_topic)
         display(self.topic_name_widget)
-        display(self.button_topic)
+        display(self.button_topic, self.output)
 
     def add_seeds(self):
         """Add seeds with widgets."""
