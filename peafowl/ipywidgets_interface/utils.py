@@ -43,36 +43,41 @@ class GuidedLDAInterface:
 
         self.model = tp.LDAModel(k=2)
 
-        self.topic_text = widgets.Textarea(
-            value="\n".join(self.topics), placeholder="", description="", disabled=False
-        )
+        self.topic_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
+
+        self.seed_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
 
     def on_button_seed(self, b: widgets.Button):
         """Button for seeds."""
+        self.output_seed.clear_output()
         topic = self.dropdown_topics.value
         word = self.seed_widget.value
         if word not in self.seeds[topic] and word:
             self.seeds[topic].append(word)
+        self.seed_text.value = "\n".join([k + ": " + ", ".join(v) for k, v in self.seeds.items()])
+        with self.output_seed:
+            display(self.seed_text)
 
     def on_button_topic(self, b: widgets.Button):
         """Action on click for seed button."""
-        self.output.clear_output()
+        self.output_topic.clear_output()
         topic = self.topic_name_widget.value
         if topic not in self.topics and topic:
             self.topics.append(topic)
         self.topic_text.value = "\n".join(self.topics)
-        with self.output:
+        with self.output_topic:
             display(self.topic_text)
 
     def add_topics(self):
         """Add topics with widgets."""
-        self.output = widgets.Output()
+        self.output_topic = widgets.Output()
         self.button_topic.on_click(self.on_button_topic)
         display(self.topic_name_widget)
-        display(self.button_topic, self.output)
+        display(self.button_topic, self.output_topic)
 
     def add_seeds(self):
         """Add seeds with widgets."""
+        self.output_seed = widgets.Output()
         self.dropdown_topics = widgets.Dropdown(
             options=self.topics, description="Topic:", disabled=False,
         )
@@ -80,7 +85,7 @@ class GuidedLDAInterface:
         self.button_seed.on_click(self.on_button_seed)
         display(self.dropdown_topics)
         display(self.seed_widget)
-        display(self.button_seed)
+        display(self.button_seed, self.output_seed)
 
     def train(self, data: pd.Series):
         """Train on data."""
