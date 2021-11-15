@@ -18,6 +18,11 @@ base_packages = [
     "spacy==3.1.4",
     "tomotopy==0.12.2",
     "ipywidgets==7.6.5",
+    "mplcursors==0.5",
+    "seaborn==0.11.2",
+    "umap-learn==0.5.2",
+    "torch==1.10.0",
+    "hdbscan==0.8.27",
 ]
 
 dev_packages = [
