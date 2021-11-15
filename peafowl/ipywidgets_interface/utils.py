@@ -21,13 +21,15 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 class GuidedLDAInterface:
     """Interface."""
 
-    def __init__(self, k: int) -> None:
+    def __init__(self, k: int, guided: bool = True) -> None:
         """Init."""
         self.k = k
         self.topics: List[str] = []
         self.button_topic = widgets.Button(
             description="Add topic", button_style="", tooltip="Add topic", value="",
         )
+
+        self.guided = guided
 
         self.topic_name_widget = widgets.Text(
             value="", placeholder="Topic name", description="New topic:", disabled=False
@@ -40,8 +42,7 @@ class GuidedLDAInterface:
         self.seed_widget = widgets.Text(
             value="", placeholder="Word", description="New seed:", disabled=False
         )
-
-        self.model = tp.LDAModel(k=2)
+        self.model = tp.LDAModel(k=self.k)
 
         self.topic_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
 
@@ -97,10 +98,11 @@ class GuidedLDAInterface:
         data = lemmatizer_dataset(data)
         for x in data:
             self.model.add_doc(x)
-        n = len(self.seeds)
-        for k, v in self.seeds.items():
-            for word in v:
-                self.model.set_word_prior(word, [1.0 if k == i else 0 for i in range(n)])
+        if self.guided:
+            n = len(self.seeds)
+            for k, v in self.seeds.items():
+                for word in v:
+                    self.model.set_word_prior(word, [1.0 if k == i else 0 for i in range(n)])
         for _ in range(0, 100, 10):
             self.model.train(10)
         return None
