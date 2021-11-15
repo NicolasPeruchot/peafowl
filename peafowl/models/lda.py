@@ -18,8 +18,8 @@ from peafowl.viz.utils import prepare_viz_LDA
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-class GuidedLDAInterface:
-    """Interface."""
+class LDA:
+    """LDA."""
 
     def __init__(self, k: int, guided: bool = True) -> None:
         """Init."""
