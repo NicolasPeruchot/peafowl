@@ -11,7 +11,7 @@ def _read(fname: str) -> str:
 
 
 base_packages = [
-    "numpy==1.21.3",
+    "numpy==1.20.0",
     "pandas==1.3.4",
     "datasets==1.14.0",
     "pyLDAvis==3.3.1",
