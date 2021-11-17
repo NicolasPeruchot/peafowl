@@ -31,7 +31,7 @@ def prepare_viz_LDA(model: tomotopy.LDAModel) -> pyLDAvis._prepare.PreparedData:
     return prepared_data
 
 
-def viz(
+def viz_bokeh(
     vectors: np.array,
     words: List[str],
     label: List[str],

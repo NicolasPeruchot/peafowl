@@ -7,7 +7,7 @@ import umap
 
 from gensim.models import Word2Vec
 
-from peafowl.models.utils import viz
+from peafowl.models.utils import viz_bokeh
 from peafowl.preprocessing.utils import lemmatizer_dataset
 
 
@@ -29,7 +29,7 @@ class Cluster:
 
     def viz_topic(self, save: bool = False, name: str = "project_0"):
         """Viz with bokeh."""
-        viz(
+        viz_bokeh(
             vectors=self.umap_vectors,
             words=list(self.embed_model.wv.index_to_key),
             label=[str(x) for x in self.clusterer.labels_],

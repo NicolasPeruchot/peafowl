@@ -5,13 +5,16 @@ import warnings
 from typing import List
 
 import ipywidgets as widgets
+import numpy as np
 import pandas as pd
 import pyLDAvis
 import tomotopy as tp
+import umap
 
+from gensim.models import Word2Vec
 from IPython.display import display
 
-from peafowl.models.utils import prepare_viz_LDA
+from peafowl.models.utils import prepare_viz_LDA, viz_bokeh
 from peafowl.preprocessing.utils import lemmatizer_dataset
 
 
@@ -111,3 +114,23 @@ class LDA:
         """Visualisation for a trained model."""
         prepared_data = prepare_viz_LDA(model=self.model)
         return pyLDAvis.display(prepared_data)
+
+    def viz_2d(self, data: pd.Series, n: int = 1000):
+        """Viz with bokeh."""
+        lemmatized_data = lemmatizer_dataset(data)
+        embed_model = Word2Vec(lemmatized_data, min_count=2, vector_size=300)
+        reducer = umap.UMAP()
+        vectors = embed_model.wv.vectors
+        umap_vectors = reducer.fit_transform(vectors)
+        mapping = dict(zip(embed_model.wv.index_to_key, umap_vectors))
+        coordinates = []
+        label = []
+        words = []
+        for i in range(2):
+            for word in self.model.get_topic_words(topic_id=i, top_n=n):
+                words.append(word[0])
+                coordinates.append(mapping[word[0]])
+                label.append(str(i))
+        coordinates = np.array(coordinates)
+        viz_bokeh(vectors=coordinates, words=words, label=label)
+        return None
