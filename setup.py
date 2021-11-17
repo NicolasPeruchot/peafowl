@@ -23,6 +23,7 @@ base_packages = [
     "umap-learn==0.5.2",
     "torch==1.10.0",
     "hdbscan==0.8.27",
+    "ipympl==0.8.2",
 ]
 
 dev_packages = [
