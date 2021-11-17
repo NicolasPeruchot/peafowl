@@ -107,6 +107,27 @@ class LDA:
             self.model.train(10)
         return None
 
+    def report(self):
+        """Get a feel for the model's performance (topic labelling + topic coherence).
+
+        References:
+            - https://bab2min.github.io/tomotopy/v0.12.1/en/label.html
+            - https://bab2min.github.io/tomotopy/v0.12.1/en/coherence.html
+        """
+        # extract candidates for auto topic labeling
+        extractor = tp.label.PMIExtractor(min_cf=10, min_df=5, max_len=5, max_cand=10000)
+        cands = extractor.extract(self.model)
+
+        # ranking the candidates of labels for a specific topic
+        labeler = tp.label.FoRelevance(self.model, cands, min_df=5, smoothing=1e-2, mu=0.25)
+        for k in range(self.model.k):
+            print("== Topic #{} ==".format(k))
+            print(
+                "Labels:", ", ".join(label for label, score in labeler.get_topic_labels(k, top_n=5))
+            )
+            for word, prob in self.model.get_topic_words(k, top_n=10):
+                print(word, prob, sep="\t")
+
     def viz(self):
         """Visualisation for a trained model."""
         prepared_data = prepare_viz_LDA(model=self.model)
