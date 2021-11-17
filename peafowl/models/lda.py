@@ -11,8 +11,8 @@ import tomotopy as tp
 
 from IPython.display import display
 
+from peafowl.models.utils import prepare_viz_LDA
 from peafowl.preprocessing.utils import lemmatizer_dataset
-from peafowl.viz.utils import prepare_viz_LDA
 
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)

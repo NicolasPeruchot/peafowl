@@ -1,15 +1,17 @@
 """Clustering model."""
+import warnings
+
 import hdbscan
 import pandas as pd
 import umap
 
-from bokeh.io import output_file, show
-from bokeh.models import CategoricalColorMapper, ColumnDataSource, HoverTool
-from bokeh.palettes import plasma
-from bokeh.plotting import figure
 from gensim.models import Word2Vec
 
+from peafowl.models.utils import viz
 from peafowl.preprocessing.utils import lemmatizer_dataset
+
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
 class Cluster:
@@ -25,21 +27,13 @@ class Cluster:
         self.umap_vectors = self.reducer.fit_transform(self.vectors)
         self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30).fit(self.umap_vectors)
 
-    def viz(self, save: bool = False, name: str = "project_0"):
-        """Viz of the clustering."""
-        list_x = self.umap_vectors[:, 0]
-        list_y = self.umap_vectors[:, 1]
-        desc = list(self.embed_model.wv.index_to_key)
-        label = [str(x) for x in self.clusterer.labels_]
-
-        source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, label=label))
-        hover = HoverTool(tooltips=[("Word", "@desc"),])
-        mapper = CategoricalColorMapper(palette=plasma(len(set(label))), factors=list(set(label)))
-
-        p = figure(plot_width=400, plot_height=400, tools=[hover], title="Clustering")
-        p.circle("x", "y", size=10, source=source, color={"field": "label", "transform": mapper})
-        if save:
-            output_file(f"data/clustering_{name}.html")
-
-        show(p)
+    def viz_topic(self, save: bool = False, name: str = "project_0"):
+        """Viz with bokeh."""
+        viz(
+            vectors=self.umap_vectors,
+            words=list(self.embed_model.wv.index_to_key),
+            label=[str(x) for x in self.clusterer.labels_],
+            save=save,
+            name=name,
+        )
         return None
