@@ -1,12 +1,12 @@
 """Clustering model."""
 import hdbscan
-import matplotlib.pyplot as plt
-import mplcursors
-import numpy as np
 import pandas as pd
-import seaborn as sns
 import umap
 
+from bokeh.io import output_file, show
+from bokeh.models import CategoricalColorMapper, ColumnDataSource, HoverTool
+from bokeh.palettes import plasma
+from bokeh.plotting import figure
 from gensim.models import Word2Vec
 
 from peafowl.preprocessing.utils import lemmatizer_dataset
@@ -25,24 +25,21 @@ class Cluster:
         self.umap_vectors = self.reducer.fit_transform(self.vectors)
         self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30).fit(self.umap_vectors)
 
-    def viz(self):
+    def viz(self, save: bool = False, name: str = "project_0"):
         """Viz of the clustering."""
-        # %matplotlib widget
-        color_palette = sns.color_palette("deep", len(np.unique(self.clusterer.labels_)))
-        cluster_colors = [
-            color_palette[x] if x >= 0 else (0.5, 0.5, 0.5) for x in self.clusterer.labels_
-        ]
-        cluster_member_colors = [
-            sns.desaturate(x, p) for x, p in zip(cluster_colors, self.clusterer.probabilities_)
-        ]
+        list_x = self.umap_vectors[:, 0]
+        list_y = self.umap_vectors[:, 1]
+        desc = list(self.embed_model.wv.index_to_key)
+        label = [str(x) for x in self.clusterer.labels_]
 
-        fig, ax = plt.subplots()
-        sc = plt.scatter(
-            *self.umap_vectors.T, s=50, linewidth=0, c=cluster_member_colors, alpha=0.25
-        )
+        source = ColumnDataSource(data=dict(x=list_x, y=list_y, desc=desc, label=label))
+        hover = HoverTool(tooltips=[("Word", "@desc"),])
+        mapper = CategoricalColorMapper(palette=plasma(len(set(label))), factors=list(set(label)))
 
-        cursor = mplcursors.cursor(sc, hover=True)
+        p = figure(plot_width=400, plot_height=400, tools=[hover], title="Clustering")
+        p.circle("x", "y", size=10, source=source, color={"field": "label", "transform": mapper})
+        if save:
+            output_file(f"data/clustering_{name}.html")
 
-        @cursor.connect("add")
-        def on_add(sel: mplcursors._pick_info.Selection):
-            sel.annotation.set(text=list(self.embed_model.wv.index_to_key)[sel.target.index])
+        show(p)
+        return None

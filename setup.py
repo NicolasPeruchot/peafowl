@@ -24,6 +24,7 @@ base_packages = [
     "torch==1.10.0",
     "hdbscan==0.8.27",
     "ipympl==0.8.2",
+    "bokeh==2.4.1",
 ]
 
 dev_packages = [
