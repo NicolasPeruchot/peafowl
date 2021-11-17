@@ -19,15 +19,27 @@ class Cluster:
 
     def __init__(self, data: pd.Series) -> None:
         """Init."""
-        self.data = data
-        self.lemmatized_data = lemmatizer_dataset(data)
-        self.embed_model = Word2Vec(self.lemmatized_data, min_count=2, vector_size=300)
+        lemmatized_data = lemmatizer_dataset(data)
+        self.embed_model = Word2Vec(lemmatized_data, min_count=2, vector_size=300)
         self.reducer = umap.UMAP()
-        self.vectors = self.embed_model.wv.vectors
-        self.umap_vectors = self.reducer.fit_transform(self.vectors)
-        self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30).fit(self.umap_vectors)
+        self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30)
 
-    def viz_topic(self, save: bool = False, name: str = "project_0"):
+    @property
+    def vectors(self):
+        """300D embeddings of the dataset, computed using Word2Vec."""
+        return self.embed_model.wv.vectors
+
+    @property
+    def umap_vectors(self):
+        """2D embeddings of the dataset, projected using UMAP."""
+        return self.reducer.transform(self.vectors)
+
+    def fit(self):
+        """Cluster dataset using Word2Vec + UMAP + HDBSCAN."""
+        self.reducer.fit(self.vectors)
+        self.clusterer.fit(self.umap_vectors)
+
+    def viz(self, save: bool = False, name: str = "project_0"):
         """Viz with bokeh."""
         viz_bokeh(
             vectors=self.umap_vectors,

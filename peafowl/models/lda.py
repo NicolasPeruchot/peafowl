@@ -24,65 +24,62 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 class LDA:
     """LDA."""
 
-    def __init__(self, k: int, guided: bool = True) -> None:
+    def __init__(self, k: int, is_guided: bool = True) -> None:
         """Init."""
         self.k = k
         self.topics: List[str] = []
-        self.button_topic = widgets.Button(
-            description="Add topic", button_style="", tooltip="Add topic", value="",
-        )
-
-        self.guided = guided
-
-        self.topic_name_widget = widgets.Text(
-            value="", placeholder="Topic name", description="New topic:", disabled=False
-        )
-
-        self.button_seed = widgets.Button(
-            description="Add seed", button_style="", tooltip="Add seed",
-        )
-
-        self.seed_widget = widgets.Text(
-            value="", placeholder="Word", description="New seed:", disabled=False
-        )
+        self.is_guided = is_guided
         self.model = tp.LDAModel(k=self.k)
 
-        self.topic_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
+        self._button_topic = widgets.Button(
+            description="Add topic", button_style="", tooltip="Add topic", value="",
+        )
+        self._topic_name_widget = widgets.Text(
+            value="", placeholder="Topic name", description="New topic:", disabled=False
+        )
+        self._button_seed = widgets.Button(
+            description="Add seed", button_style="", tooltip="Add seed",
+        )
+        self._seed_widget = widgets.Text(
+            value="", placeholder="Word", description="New seed:", disabled=False
+        )
+        self._topic_text = widgets.Textarea(
+            value="", placeholder="", description="", disabled=False
+        )
+        self._seed_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
 
-        self.seed_text = widgets.Textarea(value="", placeholder="", description="", disabled=False)
-
-    def on_button_seed(self, b: widgets.Button):
+    def _on_button_seed(self, b: widgets.Button) -> None:
         """Button for seeds."""
         self.output_seed.clear_output()
         topic = self.dropdown_topics.value
-        word = self.seed_widget.value
+        word = self._seed_widget.value
         if word not in self.seeds[topic] and word:
             self.seeds[topic].append(word)
-        self.seed_text.value = "\n".join([k + ": " + ", ".join(v) for k, v in self.seeds.items()])
+        self._seed_text.value = "\n".join([k + ": " + ", ".join(v) for k, v in self.seeds.items()])
         with self.output_seed:
-            display(self.seed_text)
+            display(self._seed_text)
 
     def explore(self, data: pd.Series, size: int = 10):
         """Show examples of data."""
         pd.set_option("display.max_colwidth", None)
         return data.sample(size)
 
-    def on_button_topic(self, b: widgets.Button):
+    def _on_button_topic(self, b: widgets.Button) -> None:
         """Action on click for seed button."""
         self.output_topic.clear_output()
-        topic = self.topic_name_widget.value
+        topic = self._topic_name_widget.value
         if topic not in self.topics and topic:
             self.topics.append(topic)
-        self.topic_text.value = "\n".join(self.topics)
+        self._topic_text.value = "\n".join(self.topics)
         with self.output_topic:
-            display(self.topic_text)
+            display(self._topic_text)
 
     def add_topics(self):
         """Add topics with widgets."""
         self.output_topic = widgets.Output()
-        self.button_topic.on_click(self.on_button_topic)
-        display(self.topic_name_widget)
-        display(self.button_topic, self.output_topic)
+        self._button_topic.on_click(self._on_button_topic)
+        display(self._topic_name_widget)
+        display(self._button_topic, self.output_topic)
 
     def add_seeds(self):
         """Add seeds with widgets."""
@@ -91,17 +88,17 @@ class LDA:
             options=self.topics, description="Topic:", disabled=False,
         )
         self.seeds = {topic: [] for topic in self.topics}
-        self.button_seed.on_click(self.on_button_seed)
+        self._button_seed.on_click(self._on_button_seed)
         display(self.dropdown_topics)
-        display(self.seed_widget)
-        display(self.button_seed, self.output_seed)
+        display(self._seed_widget)
+        display(self._button_seed, self.output_seed)
 
-    def train(self, data: pd.Series):
+    def fit(self, data: pd.Series):
         """Train on data."""
         data = lemmatizer_dataset(data)
         for x in data:
             self.model.add_doc(x)
-        if self.guided:
+        if self.is_guided:
             n = len(self.seeds)
             for k, v in self.seeds.items():
                 for word in v:
