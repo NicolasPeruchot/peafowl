@@ -7,7 +7,6 @@ import umap
 
 from gensim.models import Word2Vec
 
-from peafowl.models.utils import viz_bokeh
 from peafowl.preprocessing.utils import lemmatizer_dataset
 
 
@@ -39,13 +38,12 @@ class Cluster:
         self.reducer.fit(self.vectors)
         self.clusterer.fit(self.umap_vectors)
 
-    def viz(self, save: bool = False, name: str = "project_0"):
+    def viz(self):
         """Viz with bokeh."""
-        viz_bokeh(
-            vectors=self.umap_vectors,
-            words=list(self.embed_model.wv.index_to_key),
-            label=[str(x) for x in self.clusterer.labels_],
-            save=save,
-            name=name,
-        )
+        umap_mapper = self.reducer.fit(self.vectors)
+        umap.plot.output_notebook()
+        hover = pd.DataFrame({"word": self.embed_model.wv.index_to_key})
+        labels = [str(x) for x in self.clusterer.labels_]
+        p = umap.plot.interactive(umap_mapper, hover_data=hover, labels=labels, theme="viridis")
+        umap.plot.show(p)
         return None
