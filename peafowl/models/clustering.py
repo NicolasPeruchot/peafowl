@@ -20,6 +20,19 @@ class Cluster:
         """Init."""
         lemmatized_data = lemmatizer_dataset(data)
         self.embed_model = Word2Vec(lemmatized_data, min_count=2, vector_size=300)
+        self.embed_model = Word2Vec(
+            sentences=lemmatized_data,
+            vector_size=100,
+            window=5,
+            min_count=5,
+            sg=1,
+            hs=0,
+            negative=5,
+            ns_exponent=0.0,
+            alpha=0.05,
+            sample=0.0001,
+            epochs=10,
+        )
         self.reducer = umap.UMAP()
         self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30)
 
