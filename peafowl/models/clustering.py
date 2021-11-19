@@ -1,11 +1,12 @@
 """Clustering model."""
 import warnings
 
+import gensim
 import hdbscan
 import pandas as pd
 import umap
 
-from gensim.models import Word2Vec
+from gensim.models import Doc2Vec, Word2Vec
 
 from peafowl.preprocessing.utils import lemmatizer_dataset
 
@@ -19,7 +20,6 @@ class Cluster:
     def __init__(self, data: pd.Series) -> None:
         """Init."""
         lemmatized_data = lemmatizer_dataset(data)
-        self.embed_model = Word2Vec(lemmatized_data, min_count=2, vector_size=300)
         self.embed_model = Word2Vec(
             sentences=lemmatized_data,
             vector_size=100,
@@ -58,5 +58,41 @@ class Cluster:
         hover = pd.DataFrame({"word": self.embed_model.wv.index_to_key})
         labels = [str(x) for x in self.clusterer.labels_]
         p = umap.plot.interactive(umap_mapper, hover_data=hover, labels=labels, theme="viridis")
+        umap.plot.show(p)
+        return None
+
+
+class Cluster_docs(Cluster):
+    """Cluster docs."""
+
+    def __init__(self, data: pd.Series) -> None:
+        """Init."""
+        super().__init__(data)
+        lemmatized_data = lemmatizer_dataset(data)
+        gensim_docs = [
+            gensim.models.doc2vec.TaggedDocument(data[i], tags=[i])
+            for i in range(len(lemmatized_data))
+        ]
+        self.embed_model = Doc2Vec(
+            documents=gensim_docs,
+            vector_size=100,
+            window=5,
+            min_count=5,
+            hs=0,
+            negative=5,
+            ns_exponent=0.0,
+            alpha=0.05,
+            sample=0.0001,
+            epochs=10,
+        )
+
+    def viz(self):
+        """Viz with bokeh."""
+        umap_mapper = self.reducer.fit(self.vectors)
+        umap.plot.output_notebook()
+        # hover = pd.DataFrame({"word": self.embed_model.wv.index_to_key})
+        # labels = [str(x) for x in self.clusterer.labels_]
+        # p = umap.plot.interactive(umap_mapper, hover_data=hover, labels=labels, theme="viridis")
+        p = umap.plot.interactive(umap_mapper, theme="viridis")
         umap.plot.show(p)
         return None
