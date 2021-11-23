@@ -42,7 +42,7 @@ class Cluster_words:
 
     @property
     def vectors(self):
-        """300D embeddings of the dataset, computed using Word2Vec."""
+        """300D embeddings of each lemma in the vocabulary, computed using Word2Vec."""
         return self.embed_model.wv.vectors
 
     @property
@@ -93,7 +93,7 @@ class Cluster_docs(Cluster_words):
 
     @property
     def vectors(self):
-        """300D embeddings of the dataset, computed using Word2Vec."""
+        """300D embeddings of each articles in the dataset, computed using Doc2Vec."""
         return self.embed_model.dv.vectors
 
     def viz(self):
