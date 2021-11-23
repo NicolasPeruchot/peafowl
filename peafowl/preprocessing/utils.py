@@ -16,7 +16,7 @@ def lemmatizer(doc: spacy.tokens.doc.Doc) -> List[str]:
     return lemma
 
 
-def lemmatizer_dataset(data: List[str]):
+def lemmatizer_dataset(data: List[str]) -> List[List[str]]:
     """Lemmatize a Series of articles."""
     nlp = spacy.load("en_core_web_md")
     docs = list(nlp.pipe(data))

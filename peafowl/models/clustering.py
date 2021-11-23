@@ -1,6 +1,8 @@
 """Clustering model."""
 import warnings
 
+from typing import List
+
 import gensim
 import hdbscan
 import pandas as pd
@@ -19,7 +21,8 @@ class Cluster:
 
     def __init__(self, data: pd.Series) -> None:
         """Init."""
-        lemmatized_data = lemmatizer_dataset(data)
+        lemmatized_data: List[List[str]] = lemmatizer_dataset(data)
+        # Skip-gram Negative Sampling algorithm
         self.embed_model = Word2Vec(
             sentences=lemmatized_data,
             vector_size=100,
@@ -68,7 +71,7 @@ class Cluster_docs(Cluster):
     def __init__(self, data: pd.Series) -> None:
         """Init."""
         super().__init__(data)
-        lemmatized_data = lemmatizer_dataset(data)
+        lemmatized_data: List[List[str]] = lemmatizer_dataset(data)
         gensim_docs = [
             gensim.models.doc2vec.TaggedDocument(data[i], tags=[i])
             for i in range(len(lemmatized_data))
