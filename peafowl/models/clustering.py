@@ -7,6 +7,7 @@ import gensim
 import hdbscan
 import pandas as pd
 import umap
+import umap.plot
 
 from gensim.models import Doc2Vec, Word2Vec
 
