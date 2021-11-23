@@ -8,10 +8,7 @@ import ipywidgets as widgets
 import pandas as pd
 import pyLDAvis
 import tomotopy as tp
-import umap
-import umap.plot
 
-from gensim.models import Word2Vec
 from IPython.display import display
 
 from peafowl.models.utils import prepare_viz_LDA
@@ -132,28 +129,3 @@ class LDA:
         """Visualisation for a trained model."""
         prepared_data = prepare_viz_LDA(model=self.model)
         return pyLDAvis.display(prepared_data)
-
-    def viz_2d(self, data: pd.Series, n: int = 1000):
-        """Viz with bokeh."""
-        lemmatized_data = lemmatizer_dataset(data)
-        embed_model = Word2Vec(
-            sentences=lemmatized_data,
-            vector_size=100,
-            window=5,
-            min_count=5,
-            sg=1,
-            hs=0,
-            negative=5,
-            ns_exponent=0.0,
-            alpha=0.05,
-            sample=0.0001,
-            epochs=10,
-        )
-        reducer = umap.UMAP()
-        vectors = embed_model.wv.vectors
-        umap_mapper = reducer.fit(vectors)
-        umap.plot.output_notebook()
-        hover = pd.DataFrame({"word": embed_model.wv.index_to_key})
-        p = umap.plot.interactive(umap_mapper, hover_data=hover)
-        umap.plot.show(p)
-        return None
