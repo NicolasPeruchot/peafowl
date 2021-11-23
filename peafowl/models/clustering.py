@@ -37,7 +37,7 @@ class Cluster_words:
             sample=0.0001,
             epochs=10,
         )
-        self.reducer = umap.UMAP()
+        self.reducer = umap.UMAP(random_state=12)
         self.clusterer = hdbscan.HDBSCAN(min_cluster_size=30)
 
     @property
@@ -61,7 +61,9 @@ class Cluster_words:
         umap.plot.output_notebook()
         hover = pd.DataFrame({"word": self.embed_model.wv.index_to_key})
         labels = [str(x) for x in self.clusterer.labels_]
-        p = umap.plot.interactive(umap_mapper, hover_data=hover, labels=labels, theme="viridis")
+        p = umap.plot.interactive(
+            umap_mapper, hover_data=hover, labels=labels, theme="viridis", point_size=3
+        )
         umap.plot.show(p)
         return None
 
@@ -81,7 +83,6 @@ class Cluster_docs(Cluster_words):
             documents=gensim_docs,
             vector_size=100,
             window=5,
-            min_count=5,
             hs=0,
             negative=5,
             ns_exponent=0.0,
@@ -90,13 +91,17 @@ class Cluster_docs(Cluster_words):
             epochs=10,
         )
 
+    @property
+    def vectors(self):
+        """300D embeddings of the dataset, computed using Word2Vec."""
+        return self.embed_model.dv.vectors
+
     def viz(self):
         """Viz with bokeh."""
         umap_mapper = self.reducer.fit(self.vectors)
         umap.plot.output_notebook()
-        # hover = pd.DataFrame({"word": self.embed_model.wv.index_to_key})
-        # labels = [str(x) for x in self.clusterer.labels_]
-        # p = umap.plot.interactive(umap_mapper, hover_data=hover, labels=labels, theme="viridis")
-        p = umap.plot.interactive(umap_mapper, theme="viridis")
+
+        labels = [str(x) for x in self.clusterer.labels_]
+        p = umap.plot.interactive(umap_mapper, labels=labels, theme="viridis", point_size=3)
         umap.plot.show(p)
         return None
