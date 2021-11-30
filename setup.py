@@ -19,6 +19,7 @@ base_packages = [
     "tomotopy==0.12.2",
     "ipywidgets==7.6.5",
     "seaborn==0.11.2",
+    "umap-learn[plot]==0.5.2",
     "hdbscan==0.8.27",
 ]
 
