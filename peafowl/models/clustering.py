@@ -17,7 +17,7 @@ from peafowl.preprocessing.utils import lemmatizer_dataset
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
-class Cluster_words:
+class ClusterWords:
     """Train the clustering model."""
 
     def __init__(self, data: pd.Series) -> None:
