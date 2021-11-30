@@ -68,7 +68,7 @@ class ClusterWords:
         return None
 
 
-class Cluster_docs(Cluster_words):
+class ClusterDocs(ClusterWords):
     """Cluster docs."""
 
     def __init__(self, data: pd.Series) -> None:
