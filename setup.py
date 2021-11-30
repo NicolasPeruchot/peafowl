@@ -11,13 +11,16 @@ def _read(fname: str) -> str:
 
 
 base_packages = [
-    "numpy==1.21.3",
+    "numpy==1.20.0",
     "pandas==1.3.4",
     "datasets==1.14.0",
     "pyLDAvis==3.3.1",
     "spacy==3.1.4",
     "tomotopy==0.12.2",
     "ipywidgets==7.6.5",
+    "seaborn==0.11.2",
+    "umap-learn[plot]==0.5.2",
+    "hdbscan==0.8.27",
 ]
 
 dev_packages = [
