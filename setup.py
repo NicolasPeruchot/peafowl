@@ -21,6 +21,7 @@ base_packages = [
     "seaborn==0.11.2",
     "umap-learn[plot]==0.5.2",
     "hdbscan==0.8.27",
+    "streamlit==1.2.0",
 ]
 
 dev_packages = [
