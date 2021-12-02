@@ -1,42 +1,44 @@
 """Streamlit app."""
 import pandas as pd
+import pyLDAvis
 import streamlit as st
 
 from datasets import load_dataset
 
-from peafowl.models.lda import LDA
+from peafowl.models.lda import GuidedLda
 
 
-model = LDA(k=2, is_guided=False)
+st.title("GuidedLDA interface")
 
 st.sidebar.file_uploader("Choose a file")
 
 if st.sidebar.button("Use example dataset"):
-    data_tot = load_dataset("amazon_reviews_multi", "en")["train"]
-    data = data_tot["review_body"]
-    data = pd.Series([e for i, e in enumerate(data) if i < 1000 or i > 198999])
+    if "data" not in st.session_state:
+        data_tot = load_dataset("amazon_reviews_multi", "en")["train"]
+        data = data_tot["review_body"]
+        data = pd.Series([e for i, e in enumerate(data) if i < 1000 or i > 198999])
+        st.session_state.data = data
 
 
 if "seeds" not in st.session_state:
-    st.session_state.seeds = []
+    st.session_state.seeds = {}
+
+topic_input = st.sidebar.text_input("Write topic name")
+
+if st.sidebar.button("Add topic"):
+    st.session_state.seeds[topic_input] = []
+
+
+option = st.sidebar.selectbox("Seeds", (k for k, v in st.session_state.seeds.items()))
 
 seed_input = st.sidebar.text_input("Write seed")
 
 if st.sidebar.button("Add seed"):
-    st.session_state.seeds.append(seed_input)
-
-if st.sidebar.button("Show seeds"):
-    st.write(st.session_state.seeds)
+    st.session_state.seeds[option].append(seed_input)
 
 
-with open("data/ldavis.html", "r", encoding="utf-8") as f:
-    text = f.read()
-
-# add_selectbox = st.sidebar.selectbox(
-#     "How would you like to be contacted?", ("Email", "Home phone", "Mobile phone")
-# )
-
-
-if st.button("Say hello"):
-    st.write("aller la")
-    st.components.v1.html(text, width=1500, height=800)
+if st.button("Show representation"):
+    model = GuidedLda(seeds=st.session_state.seeds)
+    model.fit(data=st.session_state.data)
+    prepared_data = model.viz()
+    st.components.v1.html(pyLDAvis.prepared_data_to_html(prepared_data), width=1500, height=800)
