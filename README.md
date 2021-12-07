@@ -9,7 +9,7 @@
 ## Installation
 
 ```
-make developp
+make develop
 ```
 
 ## Overview
