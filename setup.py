@@ -33,7 +33,7 @@ dev_packages = [
     "flake8-bugbear",
     "flake8-docstrings",
     "ipykernel",
-    "isor",
+    "isort",
     "pre-commit",
 ]
 

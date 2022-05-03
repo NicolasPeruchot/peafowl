@@ -25,25 +25,25 @@ def sidebar():
     if "seeds" not in st.session_state:
         st.session_state.seeds = {}
 
-    def clear_form():
-        st.session_state["topic"] = ""
-        st.session_state["seed"] = ""
+    topic_input = st.sidebar.text_input("Add topic", key="topic")
 
-    topic_input = st.sidebar.text_input("Add topic", key="topic", on_change=clear_form)
-
-    if topic_input:
+    if st.sidebar.button("Add topic"):
         st.session_state.seeds[topic_input] = []
 
     option = st.sidebar.selectbox("Seeds", (k for k, v in st.session_state.seeds.items()))
 
-    seed_input = st.sidebar.text_input("Add seed", key="seed", on_change=clear_form)
+    seed_input = st.sidebar.text_input("Add seed")
 
-    if seed_input:
+    if st.sidebar.button("Add seed"):
         st.session_state.seeds[option].append(seed_input)
+
+    st.sidebar.write(pd.DataFrame.from_dict(st.session_state.seeds, orient="index").transpose())
 
 
 def main():
     """Main function."""
+    if st.button("Show example from the dataset"):
+        st.write(st.session_state.data.sample(1).values[0])
     if st.button("Show representation"):
         try:
             model = LDA(seeds=st.session_state.seeds)
