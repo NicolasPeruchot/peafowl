@@ -18,3 +18,9 @@ make develop
 - Guided Dirichlet Allocation
 - Document clustering
 - Vocab clustering
+
+## LDA Interface
+
+```
+make lda-app
+```

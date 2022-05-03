@@ -6,25 +6,24 @@ default_language_version:
   python: python3
 repos:
   - repo: https://github.com/psf/black
-    rev: 19.10b0
+    rev: 22.3.0
     hooks:
       - id: black
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.0a2
+    rev: 3.9.2
     hooks:
       - id: flake8
         additional_dependencies:
           - flake8-annotations==2.1.0
-          - flake8-bandit==2.1.2
           - flake8-bugbear==20.1.4
           - flake8-docstrings==1.5.0
           - darglint==1.4.0
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 'v0.910'
+    rev: 'v0.950'
     hooks:
       - id: mypy
   - repo: https://github.com/pycqa/isort
-    rev: 5.8.0
+    rev: 5.10.1
     hooks:
       - id: isort
         name: isort (python)
@@ -35,7 +34,7 @@ repos:
         name: isort (pyi)
         types: [pyi]
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.0.0
+    rev: v4.2.0
     hooks:
       - id: check-added-large-files
       - id: check-docstring-first
@@ -52,7 +51,7 @@ repos:
       - id: requirements-txt-fixer
       - id: trailing-whitespace
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.1.7
+    rev: v1.1.13
     hooks:
       - id: forbid-tabs
         exclude: Makefile
