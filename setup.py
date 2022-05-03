@@ -11,35 +11,35 @@ def _read(fname: str) -> str:
 
 
 base_packages = [
-    "numpy==1.20.0",
-    "pandas==1.3.4",
-    "datasets==1.14.0",
-    "pyLDAvis==3.3.1",
-    "spacy==3.1.4",
-    "tomotopy==0.12.2",
-    "ipywidgets==7.6.5",
-    "seaborn==0.11.2",
-    "umap-learn[plot]==0.5.2",
-    "hdbscan==0.8.27",
-    "streamlit==1.2.0",
+    "numpy",
+    "pandas",
+    "datasets",
+    "pyLDAvis",
+    "spacy",
+    "tomotopy",
+    "ipywidgets",
+    "seaborn",
+    "umap-learn[plot]",
+    "hdbscan",
+    "streamlit",
 ]
 
 dev_packages = [
-    "black==21.10b0",
-    "darglint==1.4.0",
-    "flake8>=3.9.2",
-    "flake8-bandit>=2.1.2",
-    "flake8-annotations>=2.7.0",
-    "flake8-bugbear>=21.9.2",
-    "flake8-docstrings>=1.6.0",
-    "ipykernel==6.5.0",
-    "isort>=5.10.0",
-    "pre-commit==2.15.0",
+    "black",
+    "darglint",
+    "flake8",
+    "flake8-bandit",
+    "flake8-annotations",
+    "flake8-bugbear",
+    "flake8-docstrings",
+    "ipykernel",
+    "isor",
+    "pre-commit",
 ]
 
 
 test_packages = [
-    "pytest>=6.2.5",
+    "pytest",
 ]
 
 
@@ -49,5 +49,8 @@ setup(
     packages=find_packages(exclude=["notebooks", "data"]),
     long_description=_read("README.md"),
     install_requires=base_packages,
-    extras_require={"dev": dev_packages + test_packages, "test": test_packages,},
+    extras_require={
+        "dev": dev_packages + test_packages,
+        "test": test_packages,
+    },
 )

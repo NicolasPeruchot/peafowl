@@ -25,14 +25,18 @@ def sidebar():
     if "seeds" not in st.session_state:
         st.session_state.seeds = {}
 
-    topic_input = st.sidebar.text_input("Add topic")
+    def clear_form():
+        st.session_state["topic"] = ""
+        st.session_state["seed"] = ""
+
+    topic_input = st.sidebar.text_input("Add topic", key="topic", on_change=clear_form)
 
     if topic_input:
         st.session_state.seeds[topic_input] = []
 
     option = st.sidebar.selectbox("Seeds", (k for k, v in st.session_state.seeds.items()))
 
-    seed_input = st.sidebar.text_input("Add seed")
+    seed_input = st.sidebar.text_input("Add seed", key="seed", on_change=clear_form)
 
     if seed_input:
         st.session_state.seeds[option].append(seed_input)
@@ -41,10 +45,17 @@ def sidebar():
 def main():
     """Main function."""
     if st.button("Show representation"):
-        model = LDA(seeds=st.session_state.seeds)
-        model.fit(data=st.session_state.data)
-        prepared_data = model.viz()
-        st.components.v1.html(pyLDAvis.prepared_data_to_html(prepared_data), width=1500, height=800)
+        try:
+            model = LDA(seeds=st.session_state.seeds)
+            model.fit(data=st.session_state.data)
+            prepared_data = model.viz()
+            st.components.v1.html(
+                pyLDAvis.prepared_data_to_html(prepared_data), width=1500, height=800
+            )
+        except RuntimeError or AssertionError:
+            st.error("Needs at least 2 topics")
+        except AttributeError:
+            st.error("No data")
 
 
 if __name__ == "__main__":
