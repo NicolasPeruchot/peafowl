@@ -25,16 +25,16 @@ def sidebar():
     if "seeds" not in st.session_state:
         st.session_state.seeds = {}
 
-    topic_input = st.sidebar.text_input("Write topic name")
+    topic_input = st.sidebar.text_input("Add topic")
 
-    if st.sidebar.button("Add topic"):
+    if topic_input:
         st.session_state.seeds[topic_input] = []
 
     option = st.sidebar.selectbox("Seeds", (k for k, v in st.session_state.seeds.items()))
 
-    seed_input = st.sidebar.text_input("Write seed")
+    seed_input = st.sidebar.text_input("Add seed")
 
-    if st.sidebar.button("Add seed"):
+    if seed_input:
         st.session_state.seeds[option].append(seed_input)
 
 
