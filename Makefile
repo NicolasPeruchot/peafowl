@@ -9,3 +9,6 @@ setup-tests:
 
 test:
 	pytest
+
+lda-app:
+	streamlit run peafowl/app/lda.py
