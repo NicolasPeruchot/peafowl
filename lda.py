@@ -43,7 +43,10 @@ def sidebar():
 def main():
     """Main function."""
     if st.button("Show example from the dataset"):
-        st.write(st.session_state.data.sample(1).values[0])
+        try:
+            st.write(st.session_state.data.sample(1).values[0])
+        except AttributeError:
+            st.error("No dataset loaded!")
     if st.button("Show representation"):
         try:
             model = LDA(seeds=st.session_state.seeds)
@@ -52,7 +55,7 @@ def main():
             st.components.v1.html(
                 pyLDAvis.prepared_data_to_html(prepared_data), width=1500, height=800
             )
-        except AssertionError:
+        except AssertionError or RuntimeError:
             st.error("Needs at least 2 topics")
         except AttributeError:
             st.error("No data")
