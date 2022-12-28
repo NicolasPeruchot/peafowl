@@ -21,6 +21,8 @@ make develop
 
 ## LDA Interface
 
+This interface combines our custom LDA model with a representation of the dataset with pyLDAvis. [Also deployed on Streamlit](https://nicolasperuchot-peafowl-lda-cloud-jonti8.streamlit.app/)
+
 ```
 make lda-app
 ```
