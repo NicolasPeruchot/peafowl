@@ -52,7 +52,7 @@ def main():
             st.components.v1.html(
                 pyLDAvis.prepared_data_to_html(prepared_data), width=1500, height=800
             )
-        except RuntimeError or AssertionError:
+        except AssertionError:
             st.error("Needs at least 2 topics")
         except AttributeError:
             st.error("No data")
